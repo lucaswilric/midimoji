@@ -12,3 +12,4 @@ Turn MIDI signals into emojis in the browser
 * [ ] Remember how to JS
 * [ ] Learn ES6
 * [ ] Learn about JS dependency management
+* [ ] Fix position calculation in `isMajorChord`
