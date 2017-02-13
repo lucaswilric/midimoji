@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>MIDImoji!</title>
+  </head>
+  <body>
+    <h1>MIDImoji &#x1f3b5;</h1>
+    <div class="display"></div>
+    <script src="bower_components/WebMidi/src/webmidi.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script type="text/javascript">
+     var MIDImoji = function (webMidi) {
+         const NATURAL_MAJOR = [0,4,7];
+         const FIRST_INV_MAJOR = [0,3,8];
+         const SECOND_INV_MAJOR = [0,5,9];
+
+         var playingNotes = [];
+
+         var isArrayIdenticalTo = function(arr1) {
+             return function(arr2) {
+                if (arr1.length !== arr2.length)
+                    return false;
+
+                for (var i=0; i<arr1.length; i++) {
+                    if (arr1[i] !== arr2[i])
+                        return false;
+                }
+
+                return true;
+             };
+         };
+
+         var isMajorChord = function(notes) {
+             var baseNotes = _.map(notes, n => n % 12).sort();
+             var root = baseNotes[0];
+             var positions = _.uniq(_.map(baseNotes, n => n - root));
+
+             console.log(positions);
+             return _.any([
+                 [0, 4, 7],
+                 [0, 3, 8],
+                 [0, 5, 9]
+             ], isArrayIdenticalTo(positions));
+         }
+
+         this.startListening = function (inputName) {
+             var input = webMidi.getInputByName(inputName);
+             input.addListener('noteon', 'all', function(e) {
+                 /* console.log("ON: " + e.note.name + e.note.octave);*/
+                 playingNotes.push(e.note.number);
+                 console.log(playingNotes);
+                 console.log(isMajorChord(playingNotes));
+             });
+
+             input.addListener('noteoff', 'all', function(e) {
+                 /* console.log("OFF: " + e.note.name + e.note.octave);*/
+                 playingNotes.splice(playingNotes.indexOf(e.note.number), 1)
+                 console.log(playingNotes);
+                 console.log(isMajorChord(playingNotes));
+             });
+         };
+
+         this.start = function (inputName) {
+             webMidi.enable(function (err) {
+                 if (err) {
+                     console.log("Could not enable WebMidi.", err);
+                 } else {
+                     console.log("Enabled WebMidi!");
+                     startListening(inputName);
+                 }
+             });
+         };
+
+         return this;
+     };
+
+     var m = MIDImoji(WebMidi);
+     m.start('Keystation 49 Port 1');
+
+    </script>
+  </body>
+</html>

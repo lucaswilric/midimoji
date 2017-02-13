@@ -1,0 +1,26 @@
+{
+  "name": "midimoji",
+  "authors": [
+    "Lucas Wilson-Richter <da.maestro@gmail.com>"
+  ],
+  "description": "Turns MIDI signals into emoji",
+  "main": "midimoji.js",
+  "keywords": [
+    "midi",
+    "emoji"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/lucaswilric/midimoji",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "WebMidi": "~2.0.0-rc.4",
+    "underscore": "^1.8.3"
+  }
+}
