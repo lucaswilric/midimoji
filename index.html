@@ -43,6 +43,14 @@
              ], isArrayIdenticalTo(positions));
          }
 
+         var numbersToEmoji = function(numbers) {
+             return _.map(numbers, n => ('&#x1f6' + (n % 80).toString(16)));
+         };
+
+         var updateDisplay = function (playingNotes) {
+             document.getElementsByClassName('display')[0].innerHTML = numbersToEmoji(playingNotes).join(' ');
+         };
+
          this.startListening = function (inputName) {
              var input = webMidi.getInputByName(inputName);
              input.addListener('noteon', 'all', function(e) {
@@ -50,6 +58,7 @@
                  playingNotes.push(e.note.number);
                  console.log(playingNotes);
                  console.log(isMajorChord(playingNotes));
+                 updateDisplay(playingNotes);
              });
 
              input.addListener('noteoff', 'all', function(e) {
@@ -57,6 +66,7 @@
                  playingNotes.splice(playingNotes.indexOf(e.note.number), 1)
                  console.log(playingNotes);
                  console.log(isMajorChord(playingNotes));
+                 updateDisplay(playingNotes);
              });
          };
 
@@ -75,7 +85,7 @@
      };
 
      var m = MIDImoji(WebMidi);
-     m.start('Keystation 49 Port 1');
+     m.start('Easy MIDI Free');
 
     </script>
   </body>
